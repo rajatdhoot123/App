@@ -1,9 +1,9 @@
-import {Book} from './components'
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
-
+import App from './routes'
+require('./style.css');
 
 ReactDOM.render(
-	<Book />, 
+	<App />, 
 	document.getElementById('app')
 )

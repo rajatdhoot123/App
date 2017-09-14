@@ -3,9 +3,10 @@ import Formsy from 'formsy-react';
 import classnames from 'classnames'
 import moment from 'moment'
 import { DropdownButton , MenuItem, Button } from 'react-bootstrap'
+import { Popular } from './NavBar'
 import axios from 'axios'
 
-export class Book extends React.Component {
+export default class Book extends React.Component {
 	constructor(props){
 		super(props)
 
@@ -20,8 +21,9 @@ export class Book extends React.Component {
 			others:"",
 			total_expense:0,
 			activeGenes:"Cotton",
-			industry:"",
+			industry:{name:"Jyoti",id:"1"},
 			mob:"",
+			village:"",
 		}
 
 		this.handleName = this.handleName.bind(this);
@@ -36,16 +38,44 @@ export class Book extends React.Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleMobNo = this.handleMobNo.bind(this);
 		this.handleIndustryName = this.handleIndustryName.bind(this);
+		this.handleVillage = this.handleVillage.bind(this);
 	}
 
 	handleSubmit(){
+		let self = this;
 		axios.post("http://localhost:5000/submit",this.state)
 		.then(function (response) {
-    	console.log(response);
+    	if(response.data.code === 200){
+    		self.setState({
+				name : "",
+				vehicle:"",
+				rate:"",
+				weight:"",
+				ohe:"",
+				commision:"",
+				aggrement:"",
+				others:"",
+				total_expense:0,
+				activeGenes:"Cotton",
+				industry:{name:"Jyoti",id:"1"},
+				mob:"",
+				village:"",
+			})
+			alert("SuccessFully Inserted")
+    	}
+    	else if(response.data.code === 400){
+    		alert("Mob No is Already Registered")	
+    	}
   		})
   		.catch(function (error) {
     	console.log(error);
   		});
+	}
+
+	handleVillage(e){
+		this.setState({
+		village: e.target.value,
+	})
 	}
 
 	handleMobNo(e){
@@ -56,7 +86,7 @@ export class Book extends React.Component {
 
 	handleIndustryName(e){
 		this.setState({
-			industry: e.target.value
+			industry:e
 		})
 	}
 	handleName(e){
@@ -154,14 +184,15 @@ export class Book extends React.Component {
 	}
 
 	handleGenes(e){
-		console.log(e);
 		this.setState({
 			activeGenes:e
 		})
 	}
 	render(){
+		const industry_name = {1:"Jyoti",2:"Hanuman",3:"Ajit",4:"Ajmani",5:"Vimal"}
 		let now = new Date();
 		return (
+			<div>
 			<div className="container">
   				<div className="panel panel-default">
     				<div className="panel-heading text-center">Shree Ganesh</div>
@@ -179,8 +210,17 @@ export class Book extends React.Component {
 			    				</div>
 			    				<br />
 			    				<div className="row">
-									<div className="col-md-8 col-sm-8">
-				  						<input type="text" className="form-control" placeholder="Industry Name" aria-describedby="basic-addon1" onChange={this.handleIndustryName} value={this.state.industry}/>
+			    					<div className="col-md-4 col-sm-4">
+						  				<input type="text" className="form-control" placeholder="Village" aria-describedby="basic-addon1" onChange={this.handleVillage} value={this.state.village}/>
+						  			</div>
+									<div className="col-md-4 col-sm-4">
+				  						<DropdownButton className="btn btn-secondary dropdown-toggle" title={this.state.industry.name} id="bg-vertical-dropdown-1" onSelect={this.handleIndustryName} aria-haspopup="true" aria-expanded="false">
+					      				{
+					      					Object.keys(industry_name).map((keys) => {
+					      					return 	<MenuItem key={keys} className={this.state.industry.name === `${industry_name[keys]}` ? "active" : ""} eventKey={{name:`${industry_name[keys]}`,id:`${keys}`}}>{`${industry_name[keys]}`}</MenuItem>
+					      					})
+					      				}
+					    			</DropdownButton>
 				  					</div>
 						  			<div className="col-md-4 col-sm-4">
 						  				<input type="number" className="form-control" placeholder="Mobile No" aria-describedby="basic-addon1" onChange={this.handleMobNo} value={this.state.mob}/>
@@ -255,7 +295,10 @@ export class Book extends React.Component {
 				        	</div>
 			    		</div>
 				</div>
-				<Button type="button" block onClick={this.handleSubmit} className="btn btn-primary">Submit</Button>
+				<div className="col-md-12 col-sm-12">
+					<Button type="button" block onClick={this.handleSubmit} className="btn btn-primary">Submit</Button>
+				</div>
+			</div>
 			</div>
 		)
 	}

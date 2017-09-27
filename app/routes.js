@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route , Switch } from 'react-router-dom'
-import {Popular,Book,Jyoti} from './components';
+import {Popular,Book, Jyoti} from './components';
 
 export default class App extends React.Component {
   render() {

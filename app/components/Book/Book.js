@@ -299,7 +299,7 @@ export default class Book extends React.Component {
 					<Button type="button" block onClick={this.handleSubmit} className="btn btn-primary">Submit</Button>
 				</div>
 			</div>
-			</div>
+			</div>	
 		)
 	}
 }

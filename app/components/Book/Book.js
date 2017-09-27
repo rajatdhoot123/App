@@ -2,9 +2,29 @@ import React from 'react'
 import Formsy from 'formsy-react';
 import classnames from 'classnames'
 import moment from 'moment'
+import Time from 'react-time'
 import { DropdownButton , MenuItem, Button } from 'react-bootstrap'
 import { Popular } from './NavBar'
 import axios from 'axios'
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
+
+
+const getOptions = (input) => {
+  return axios.get(`http://localhost:5000/getallcustomers`)
+    .then((response) => {
+    	let json = []
+    	response.data.status.map((elem) => {
+    		let obj = {}
+    		obj['label'] = elem.FirstName,
+    		obj['value'] = elem,
+    		json.push(obj)
+    	})
+      return json;
+    }).then((json) => {
+      return { options: json };
+    });
+}
 
 export default class Book extends React.Component {
 	constructor(props){
@@ -24,6 +44,7 @@ export default class Book extends React.Component {
 			industry:{name:"Jyoti",id:"1"},
 			mob:"",
 			village:"",
+			customerName:"",
 		}
 
 		this.handleName = this.handleName.bind(this);
@@ -39,6 +60,7 @@ export default class Book extends React.Component {
 		this.handleMobNo = this.handleMobNo.bind(this);
 		this.handleIndustryName = this.handleIndustryName.bind(this);
 		this.handleVillage = this.handleVillage.bind(this);
+		this.hadleCustomerSelect = this.hadleCustomerSelect.bind(this);
 	}
 
 	handleSubmit(){
@@ -92,6 +114,15 @@ export default class Book extends React.Component {
 	handleName(e){
 		this.setState({
 			name: e.target.value
+		})
+	}
+
+	hadleCustomerSelect(e){
+		this.setState({
+			customerName:e,
+			village:e.value.village,
+			mob:e.value.mobile_no,
+			name:e.label,
 		})
 	}
 
@@ -202,6 +233,14 @@ export default class Book extends React.Component {
 		    				<div className="well">	
 			    				<div className="row">
 									<div className="col-md-8 col-sm-8">
+										<Select.Async
+										  name="customer_name"
+										  value={this.state.customerName}
+										  loadOptions={getOptions}
+										  autosize={true}
+										  placeholder="Enter customer name"
+										  onChange={this.hadleCustomerSelect}
+										/>
 				  						<input type="text" className="form-control" placeholder="Customer Name" aria-describedby="basic-addon1" onChange={this.handleName} value={this.state.name}/>
 				  					</div>
 						  			<div className="col-md-4 col-sm-4">
@@ -291,7 +330,8 @@ export default class Book extends React.Component {
 				            	Signature
 				        	</div>
 				        	<div className="col-md-6 col-sm-6">
-				            	<p>Date {moment().calendar() +"   "+ moment().get('minute') +"   "+ moment().get('second')}{/*<Time value={now} format="YYYY/MM/DD" />*/}</p>
+       						 	<p>Today is <Time value={now} format="DD/MM/YYYY" /></p>
+       						 	<p>Time is <Time value={now} format="HH:mm" /></p>
 				        	</div>
 			    		</div>
 				</div>

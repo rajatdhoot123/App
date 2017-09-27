@@ -148,7 +148,6 @@ export class Jyoti extends React.Component {
                   <tbody>
                  {
                     Object.keys(this.state.selectedData).map((temp,index) => {
-                      console.log(this.state.selectedData[temp])
                     return(
                   <tr key={index}>
                     <th>{this.state.selectedData[temp].name}</th>
@@ -166,6 +165,7 @@ export class Jyoti extends React.Component {
             </Modal.Body>
             <Modal.Footer>
               <Button onClick={this.close}>Close</Button>
+              <Button onClick={this.PrintDiv}>Print</Button>
             </Modal.Footer>
           </Modal>
         </div>

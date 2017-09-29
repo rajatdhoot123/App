@@ -1,22 +1,47 @@
 import React from 'react'
 import axios from 'axios'
 import { Modal ,Button} from 'react-bootstrap'
+import { NavLink } from  'react-router-dom'
 
-export class Jyoti extends React.Component {
+
+  function SelectIndustry(props) {
+
+    var options = ['Jyoti','Ajmani','Ajit','Hanuman'];
+    return (
+      <div>
+        <ul className='languages'>
+          {options.map(function (option) {
+            return (
+              <li
+                key={option}
+                style={option === props.selectedOption ? {color: '#d0021b'} : null} 
+                onClick={props.onSelect.bind(null, option)} key={option} to={`/${option}`}>{option}
+              </li>
+            )
+          }, this)}
+        </ul>
+      </div>
+    )
+  }
+
+export default class Industry extends React.Component {
   constructor(props){
     super(props)
 
     this.state = {
-      jyoti_data : null,
+      data : null,
       selectedCheckbox : {},
       selectedData : {},
       total : [],
+      industry:"Jyoti",
+
     }
 
     this.PrintDiv = this.PrintDiv.bind(this);
     this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
-    this.close = this.close.bind(this)
-    this.open = this.open.bind(this)
+    this.close = this.close.bind(this);
+    this.open = this.open.bind(this);
+    this.updateOption = this.updateOption.bind(this);
   }
 
   PrintDiv() {
@@ -67,9 +92,19 @@ export class Jyoti extends React.Component {
     console.log(this.state.selectedCheckbox,"CheckBox")
   }
 
-  componentDidMount(){
+  updateOption(abc){
+    this.setState({industry: abc}, function () {
+      this.handleIndustry(this.state.industry);
+    });
+  }
+
+    componentDidMount(){
+    this.updateOption(this.state.industry);
+  }
+
+  handleIndustry(industry) {
     let self = this;
-    axios.get("http://localhost:5000/industry/Jyoti")
+    axios.get(`http://localhost:5000/industry/${industry}`)
     .then(function (response) {
       let selectedPrevCheckbox = self.state.selectedCheckbox;
       let a = {};
@@ -79,7 +114,7 @@ export class Jyoti extends React.Component {
         b = {...a,...b}
       })
         self.setState({
-         jyoti_data:response.data.status,
+         data:response.data.status,
          selectedCheckbox : b,
         })
       })
@@ -87,12 +122,14 @@ export class Jyoti extends React.Component {
       console.log(error);
       });
   }
+
   render(){
-    if(this.state.jyoti_data === null){return <h2> Wait </h2>}
-    else{
-      console.log(this.state.selectedCheckbox)
     return(
       <div>
+        <SelectIndustry selectedOption={this.state.industry} onSelect={this.updateOption}/>
+        {!this.state.data
+          ? <p>LOADING!</p>
+          :
         <div className="tableData">
           <table className="table table-inverse">
           <thead>
@@ -106,7 +143,7 @@ export class Jyoti extends React.Component {
             </tr>
           </thead>
           <tbody>
-          {this.state.jyoti_data.map((elem,index) => {
+          {this.state.data.map((elem,index) => {
             return (
                 <tr key={index} name={index}>
                   <th>
@@ -170,10 +207,10 @@ export class Jyoti extends React.Component {
           </Modal>
         </div>
         </div>
+      }
           <button type="button" className="btn btn-primary btn-block" onClick={this.PrintDiv}>Print</button>
           <button type="button" className="btn btn-primary btn-block" onClick={this.open}>Calculate</button>
       </div>
     )
-  }
   }
 }

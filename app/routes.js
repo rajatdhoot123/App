@@ -1,17 +1,17 @@
 import React from 'react';
 import { BrowserRouter, Route , Switch } from 'react-router-dom'
-import {Popular,Book, Jyoti} from './components';
+import {Popular,Book, Industry  , Nav} from './components';
 
 export default class App extends React.Component {
   render() {
     return (
     	 <BrowserRouter>
 		    <div className='container'>
-          <Popular />
+          <Nav />
 		    	<Switch>
                 <Route exact path='/' component={Book} />
                 <Route exact path='/Book' component={Book} />
-            		<Route exact path='/Jyoti' component={Jyoti} />
+                <Route exact path='/Industry' component={Industry} />
 		    	</Switch>
 		    </div>
 		 </BrowserRouter>

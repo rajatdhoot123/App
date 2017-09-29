@@ -1,3 +1,3 @@
 export Book from './Book/Book'
-export {Popular} from './Book/NavBar'
-export {Jyoti} from './Book/Jyoti'
+export Industry from './Book/Industry'
+export {Nav} from './Nav'

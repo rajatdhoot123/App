@@ -4,7 +4,6 @@ import classnames from 'classnames'
 import moment from 'moment'
 import Time from 'react-time'
 import { DropdownButton , MenuItem, Button } from 'react-bootstrap'
-import { Popular } from './NavBar'
 import axios from 'axios'
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
@@ -117,7 +116,24 @@ export default class Book extends React.Component {
 		})
 	}
 
+
 	hadleCustomerSelect(e){
+		(e === null) ?
+		this.setState({
+			customerName:"",
+			village:"",
+			mob:"",
+			name:"",
+		})
+		:
+		(e.className === "Select-create-option-placeholder") ? 
+		this.setState({
+			customerName:e,
+			village:"",
+			mob:"",
+			name:e.label,
+		})
+		:
 		this.setState({
 			customerName:e,
 			village:e.value.village,
@@ -233,7 +249,7 @@ export default class Book extends React.Component {
 		    				<div className="well">	
 			    				<div className="row">
 									<div className="col-md-8 col-sm-8">
-										<Select.Async
+										<Select.AsyncCreatable
 										  name="customer_name"
 										  value={this.state.customerName}
 										  loadOptions={getOptions}
@@ -241,7 +257,6 @@ export default class Book extends React.Component {
 										  placeholder="Enter customer name"
 										  onChange={this.hadleCustomerSelect}
 										/>
-				  						<input type="text" className="form-control" placeholder="Customer Name" aria-describedby="basic-addon1" onChange={this.handleName} value={this.state.name}/>
 				  					</div>
 						  			<div className="col-md-4 col-sm-4">
 						  				<input type="text" className="form-control" placeholder="Vehicle No" aria-describedby="basic-addon1" onChange={this.handleVehicle} value={this.state.vehicle}/>
